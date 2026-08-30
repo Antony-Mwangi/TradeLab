@@ -1,10 +1,12 @@
+
 import type { Metadata } from "next";
+import Providers from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TradeLab | Trading Performance & Analysis",
+  title: "TradeLab",
   description:
-    "Journal your trades, analyze your performance, backtest strategies and improve your trading psychology.",
+    "A trading analysis, journaling, backtesting, and trading psychology platform.",
 };
 
 export default function RootLayout({
@@ -14,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
-} 
+}
