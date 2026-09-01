@@ -1,3 +1,4 @@
+// src/app/journal/[id]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ interface JournalEntry {
   exitPrice: number;
   pnl: number;
   notes?: string;
+  imageUrl?: string; // <--- Added imageUrl property here
   createdAt: string;
 }
 
@@ -256,6 +258,20 @@ export default function TradeDetailsPage() {
                 </p>
               </div>
             </div>
+
+            {/* Chart Screenshot Section */}
+            {trade.imageUrl && (
+              <div className="py-6 border-b border-slate-800">
+                <h3 className="text-sm font-medium text-slate-300 mb-3">Chart Screenshot</h3>
+                <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950 p-2">
+                  <img
+                    src={trade.imageUrl}
+                    alt={`${trade.asset} Chart Screenshot`}
+                    className="w-full h-auto rounded-lg object-contain max-h-[500px]"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="pt-6">
               <h3 className="text-sm font-medium text-slate-300 mb-2">Trade Notes & Observations</h3>
