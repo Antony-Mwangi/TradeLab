@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,6 +17,7 @@ import {
   Target,
   TrendingUp,
   X,
+  Sparkles,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -128,6 +128,18 @@ export default function DashboardPage() {
           >
             <CalendarDays size={19} />
             Trading Calendar
+          </a>
+
+          {/* AI Analyst Link */}
+          <a
+            href="/ai"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-white"
+          >
+            <Sparkles size={19} />
+            TradeLab AI Analyst
+            <span className="ml-auto rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+              NEW
+            </span>
           </a>
         </nav>
 
@@ -268,21 +280,21 @@ export default function DashboardPage() {
             </a>
 
             <a
-              href="/psychology"
-              className="group rounded-2xl border border-slate-800 bg-slate-900/60 p-5 transition hover:border-amber-500/40 hover:bg-slate-900"
+              href="/ai"
+              className="group rounded-2xl border border-slate-800 bg-slate-900/60 p-5 transition hover:border-purple-500/40 hover:bg-slate-900"
             >
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400">
-                <Brain size={21} />
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
+                <Sparkles size={21} />
               </div>
 
-              <h2 className="font-semibold">Review Psychology</h2>
+              <h2 className="font-semibold">AI Trading Analyst</h2>
 
               <p className="mt-1 text-sm leading-5 text-slate-500">
-                Reflect on emotions, discipline, and decision-making.
+                Get personalized insights from your trading data.
               </p>
 
-              <div className="mt-4 flex items-center text-sm font-medium text-amber-400">
-                Open psychology
+              <div className="mt-4 flex items-center text-sm font-medium text-purple-400">
+                Chat with AI
                 <ChevronRight
                   size={16}
                   className="ml-1 transition-transform group-hover:translate-x-1"
