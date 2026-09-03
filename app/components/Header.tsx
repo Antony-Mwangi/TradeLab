@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, TrendingUp, X } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Header() {
@@ -35,116 +36,154 @@ export default function Header() {
   ];
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-lg shadow-lg shadow-gray-200/50 border-gray-200/50"
-          : "bg-white/80 backdrop-blur border-gray-200/30"
-      }`}
-    >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        {/* Logo with animation */}
-        <Link
-          href="/"
-          className="group flex items-center gap-2 transition-transform duration-300 hover:scale-105"
-        >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-200/50 group-hover:scale-110">
-            <TrendingUp className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
+    <header className="sticky top-0 z-50 w-full shadow-2xl">
+      {/* TOP INFO BAR - Optional, you can remove if not needed */}
+      <div className={`bg-black text-gray-300 text-xs sm:text-sm py-2.5 px-4 border-b border-neutral-900 transition-all duration-300 ${
+        scrolled ? "hidden" : ""
+      }`}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 text-gray-400">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-medium">TradeLab Analytics Platform</span>
+            </div>
           </div>
-
-          <span className="text-xl font-bold tracking-tight text-gray-900">
-            Trade<span className="text-emerald-600">Lab</span>
-          </span>
-        </Link>
-
-        {/* Desktop Navigation with animated links */}
-        <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="group relative text-sm text-gray-600 transition-colors duration-300 hover:text-emerald-600"
-            >
-              {link.label}
-              {/* Animated underline */}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
-        </nav>
-
-        {/* Desktop Actions with animations */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/login"
-            className="px-4 py-2 text-sm text-gray-600 transition-all duration-300 hover:text-emerald-600 hover:scale-105"
-          >
-            Sign in
-          </Link>
-
-          <Link
-            href="/register"
-            className="group relative overflow-hidden rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-200/50 active:scale-95"
-          >
-            <span className="relative z-10">Get Started</span>
-            {/* Button shimmer effect */}
-            <span className="absolute inset-0 -z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:animate-shimmer" />
-          </Link>
+          <div className="text-emerald-400 font-bold tracking-widest text-[10px] uppercase sm:block hidden">
+            Data-Driven Trading
+          </div>
         </div>
-
-        {/* Mobile Menu Button with animation */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="relative rounded-lg p-2 text-gray-600 transition-all duration-300 hover:bg-gray-100 hover:scale-110 md:hidden"
-          aria-label="Toggle navigation menu"
-        >
-          {mobileMenuOpen ? (
-            <X className="h-6 w-6 animate-fade-in" />
-          ) : (
-            <Menu className="h-6 w-6 animate-fade-in" />
-          )}
-        </button>
       </div>
 
-      {/* Mobile Navigation with slide animation */}
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
-          mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="border-t border-gray-200/50 bg-white">
-          <nav className="mx-auto flex max-w-7xl flex-col px-6 py-5">
+      {/* CORE NAVIGATION (Dark Theme) */}
+      <div className={`transition-all duration-300 ${
+        scrolled 
+          ? "bg-black/95 backdrop-blur-lg border-b border-neutral-900/50" 
+          : "bg-black border-b border-neutral-900"
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 h-28 flex justify-between items-center">
+          
+          {/* Brand Logo - Overlapping Style (Like KEGO) */}
+          <Link href="/" className="flex items-center justify-center group h-full select-none z-10">
+            {/* LARGE OVERLAPPING LOGO WRAPPER */}
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 -my-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+              <Image 
+                src="/images/LOGO.png" 
+                alt="TradeLab Logo" 
+                fill
+                priority
+                className="object-contain bg-transparent drop-shadow-xl"
+              />
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-bold tracking-wider uppercase">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.label} 
+                href={link.href}
+                className="transition-colors py-2 relative tracking-widest text-gray-300 hover:text-emerald-400"
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link 
+              href="/login" 
+              className="text-gray-300 hover:text-white font-medium text-sm transition-colors duration-300"
+            >
+              Sign in
+            </Link>
+            <Link 
+              href="/register" 
+              className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold px-6 py-3 rounded text-xs tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-emerald-500/20 flex items-center gap-2 group"
+            >
+              Get Started
+              <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+            </Link>
+          </div>
+
+          {/* Mobile Menu Trigger */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            className="p-2 text-gray-400 hover:text-white md:hidden transition-colors focus:outline-none"
+            aria-label="Toggle navigation"
+          >
+            {mobileMenuOpen ? <X size={28} className="text-emerald-400" /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Mobile Flyout (Dark Theme) */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-black border-b border-neutral-900 px-4 pt-2 pb-6 space-y-3 absolute top-full left-0 w-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+            {/* Mobile Logo */}
+            <div className="flex items-center gap-3 pb-4 mb-2 border-b border-neutral-900">
+              <div className="relative w-14 h-14 flex items-center justify-center">
+                <Image 
+                  src="/images/LOGO.png" 
+                  alt="TradeLab Logo" 
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div>
+                <span className="text-lg font-bold tracking-tight text-white">
+                  Trade<span className="text-emerald-400">Lab</span>
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  </span>
+                  <span className="text-[10px] font-medium text-emerald-400 uppercase tracking-wider">
+                    Available
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {navLinks.map((link, index) => (
               <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="group flex items-center justify-between border-b border-gray-100 py-4 text-sm text-gray-600 transition-all duration-300 hover:text-emerald-600 hover:pl-2"
+                className="flex items-center justify-between px-4 py-3 rounded-md font-bold text-sm tracking-wide uppercase text-gray-300 hover:bg-neutral-900 hover:text-emerald-400 transition-all duration-300"
                 style={{
                   animationDelay: `${index * 0.05}s`,
                 }}
               >
-                {link.label}
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/0 transition-all duration-300 group-hover:bg-emerald-400/50" />
+                <span className="flex items-center gap-3">
+                  <span className="text-emerald-400/40 font-mono text-xs">0{index + 1}</span>
+                  {link.label}
+                </span>
+                <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             ))}
-
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="py-4 text-sm text-gray-600 transition-all duration-300 hover:text-emerald-600 hover:pl-2"
-            >
-              Sign in
-            </Link>
-
-            <Link
-              href="/register"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 text-center text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-200/50 active:scale-95"
-            >
-              Get Started
-            </Link>
-          </nav>
-        </div>
+            
+            <div className="pt-4 px-1 border-t border-neutral-900 mt-2">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-center text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold py-3.5 rounded-md text-center block text-xs uppercase tracking-widest shadow-lg hover:shadow-emerald-500/20 transition-all duration-300"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

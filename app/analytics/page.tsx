@@ -22,6 +22,14 @@ import {
   Percent,
   Award,
   AlertCircle,
+  TrendingDown,
+  TrendingUp as TrendingUpIcon,
+  Activity,
+  Zap,
+  Shield,
+  Award as AwardIcon,
+  Flame,
+  Snowflake,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import {
@@ -83,6 +91,7 @@ export default function AnalyticsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [animateCards, setAnimateCards] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -95,6 +104,13 @@ export default function AnalyticsPage() {
       fetchAnalytics();
     }
   }, [status]);
+
+  useEffect(() => {
+    // Trigger animation after data loads
+    if (!loading && analytics) {
+      setTimeout(() => setAnimateCards(true), 100);
+    }
+  }, [loading, analytics]);
 
   const fetchAnalytics = async () => {
     try {
@@ -113,8 +129,8 @@ export default function AnalyticsPage() {
     return (
       <main className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-400"></div>
-          <p className="text-slate-400 text-sm">Loading analytics...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-400"></div>
+          <p className="text-slate-400 text-sm animate-pulse">Loading analytics...</p>
         </div>
       </main>
     );
@@ -134,12 +150,14 @@ export default function AnalyticsPage() {
       {
         label: "Equity Curve",
         data: analytics?.equityCurve.map((item) => item.pnl) || [],
-        borderColor: "#10b981",
-        backgroundColor: "rgba(16, 185, 129, 0.1)",
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59, 130, 246, 0.1)",
         fill: true,
         tension: 0.4,
-        pointRadius: 2,
-        pointBackgroundColor: "#10b981",
+        pointRadius: 3,
+        pointBackgroundColor: "#3b82f6",
+        pointBorderColor: "#60a5fa",
+        pointBorderWidth: 2,
       },
     ],
   };
@@ -149,8 +167,8 @@ export default function AnalyticsPage() {
     datasets: [
       {
         data: [analytics?.winningTrades || 0, analytics?.losingTrades || 0],
-        backgroundColor: ["rgba(16, 185, 129, 0.8)", "rgba(239, 68, 68, 0.8)"],
-        borderColor: ["#10b981", "#ef4444"],
+        backgroundColor: ["rgba(59, 130, 246, 0.8)", "rgba(16, 185, 129, 0.8)"],
+        borderColor: ["#3b82f6", "#10b981"],
         borderWidth: 2,
       },
     ],
@@ -158,6 +176,10 @@ export default function AnalyticsPage() {
 
   const chartOptions = {
     responsive: true,
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
+    },
     plugins: {
       legend: {
         labels: {
@@ -190,6 +212,10 @@ export default function AnalyticsPage() {
 
   const doughnutOptions = {
     responsive: true,
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
+    },
     plugins: {
       legend: {
         labels: {
@@ -216,7 +242,7 @@ export default function AnalyticsPage() {
       >
         <div className="flex h-20 items-center justify-between border-b border-slate-800 px-6">
           <a href="/dashboard" className="text-xl font-bold tracking-tight">
-            Trade<span className="text-emerald-400">Lab</span>
+            Trade<span className="text-blue-400">Lab</span>
           </a>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -243,7 +269,7 @@ export default function AnalyticsPage() {
           </a>
           <a
             href="/analytics"
-            className="flex items-center gap-3 rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-400"
+            className="flex items-center gap-3 rounded-xl bg-blue-500/10 px-4 py-3 text-sm font-medium text-blue-400"
           >
             <LineChartIcon size={19} />
             Analytics
@@ -286,20 +312,7 @@ export default function AnalyticsPage() {
         </nav>
 
         <div className="border-t border-slate-800 p-4">
-          <a
-            href="/profile"
-            className="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-white"
-          >
-            <User size={19} />
-            Profile
-          </a>
-          <a
-            href="/settings"
-            className="mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-white"
-          >
-            <Settings size={19} />
-            Settings
-          </a>
+         
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-500/10 hover:text-red-400"
@@ -332,7 +345,7 @@ export default function AnalyticsPage() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-sm font-semibold text-emerald-400">
+                <span className="text-sm font-semibold text-blue-400">
                   {userName.charAt(0).toUpperCase()}
                 </span>
               )}
@@ -342,11 +355,12 @@ export default function AnalyticsPage() {
 
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
-          <section className="mb-8">
-            <p className="mb-2 text-sm font-medium text-emerald-400">
+          <section className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <p className="mb-2 text-sm font-medium text-blue-400 flex items-center gap-2">
+              <Activity size={16} />
               Performance Analytics
             </p>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
               Trading Analytics, {firstName}
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
@@ -356,35 +370,47 @@ export default function AnalyticsPage() {
 
           {/* Key Metrics */}
           <section className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-all duration-700 hover:border-blue-500/40 hover:bg-slate-900 hover:shadow-lg hover:shadow-blue-500/10 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '100ms' }}>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-400">Total Trades</p>
-                <BarChart3 className="text-emerald-400" size={18} />
+                <div className="rounded-lg bg-blue-500/10 p-2 text-blue-400">
+                  <BarChart3 size={18} />
+                </div>
               </div>
-              <p className="mt-2 text-2xl font-bold">{analytics?.totalTrades || 0}</p>
+              <p className="mt-2 text-2xl font-bold text-white">{analytics?.totalTrades || 0}</p>
               <p className="text-xs text-slate-500">
                 {analytics?.winningTrades || 0} wins · {analytics?.losingTrades || 0} losses
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-all duration-700 hover:border-emerald-500/40 hover:bg-slate-900 hover:shadow-lg hover:shadow-emerald-500/10 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '200ms' }}>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-400">Win Rate</p>
-                <Percent className="text-blue-400" size={18} />
+                <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-400">
+                  <Percent size={18} />
+                </div>
               </div>
-              <p className="mt-2 text-2xl font-bold">{analytics?.winRate || 0}%</p>
+              <p className="mt-2 text-2xl font-bold text-white">{analytics?.winRate || 0}%</p>
               <div className="mt-1 h-1.5 w-full rounded-full bg-slate-800">
                 <div
-                  className="h-1.5 rounded-full bg-blue-400"
+                  className="h-1.5 rounded-full bg-gradient-to-r from-blue-400 to-emerald-400 transition-all duration-1000"
                   style={{ width: `${Math.min(analytics?.winRate || 0, 100)}%` }}
                 />
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-all duration-700 hover:border-blue-500/40 hover:bg-slate-900 hover:shadow-lg hover:shadow-blue-500/10 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '300ms' }}>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-400">Net P&L</p>
-                <DollarSign className="text-emerald-400" size={18} />
+                <div className={`rounded-lg p-2 ${(analytics?.netPnl || 0) >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                  <DollarSign size={18} />
+                </div>
               </div>
               <p
                 className={`mt-2 text-2xl font-bold ${
@@ -396,10 +422,14 @@ export default function AnalyticsPage() {
               <p className="text-xs text-slate-500">Profit Factor: {analytics?.profitFactor || 0}</p>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-all duration-700 hover:border-blue-500/40 hover:bg-slate-900 hover:shadow-lg hover:shadow-blue-500/10 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '400ms' }}>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-400">Expectancy</p>
-                <Award className="text-purple-400" size={18} />
+                <div className="rounded-lg bg-blue-500/10 p-2 text-blue-400">
+                  <Award size={18} />
+                </div>
               </div>
               <p
                 className={`mt-2 text-2xl font-bold ${
@@ -414,8 +444,13 @@ export default function AnalyticsPage() {
 
           {/* Main Charts - Equity Curve & Win/Loss */}
           <section className="mb-8 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 lg:col-span-2">
-              <h2 className="mb-4 text-lg font-semibold">Equity Curve</h2>
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition-all duration-700 hover:border-blue-500/20 hover:shadow-lg hover:shadow-blue-500/5 lg:col-span-2 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '500ms' }}>
+              <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                <TrendingUpIcon size={20} className="text-blue-400" />
+                Equity Curve
+              </h2>
               <div className="h-72">
                 {analytics?.equityCurve && analytics.equityCurve.length > 0 ? (
                   <Line data={equityData} options={chartOptions} />
@@ -427,8 +462,13 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-              <h2 className="mb-4 text-lg font-semibold">Win/Loss Distribution</h2>
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition-all duration-700 hover:border-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/5 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '600ms' }}>
+              <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                <BarChart3 size={20} className="text-emerald-400" />
+                Win/Loss Distribution
+              </h2>
               <div className="h-72">
                 {analytics?.totalTrades ? (
                   <Doughnut data={winLossData} options={doughnutOptions} />
@@ -443,35 +483,55 @@ export default function AnalyticsPage() {
 
           {/* Risk Analysis - Full Width */}
           <section className="mb-8">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-              <h2 className="mb-4 text-lg font-semibold">Risk Analysis</h2>
+            <div className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition-all duration-700 hover:border-blue-500/20 hover:shadow-lg hover:shadow-blue-500/5 ${
+              animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+            }`} style={{ animationDelay: '700ms' }}>
+              <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                <Shield size={20} className="text-blue-400" />
+                Risk Analysis
+              </h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="text-xs text-slate-400">Avg Risk Per Trade</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 transition-all duration-300 hover:border-yellow-500/30 hover:bg-slate-900/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <Zap size={12} className="text-yellow-400" />
+                    Avg Risk Per Trade
+                  </p>
                   <p className="mt-1 text-lg font-semibold text-yellow-400">
                     {analytics?.riskAnalysis.avgRisk || "1.0%"}
                   </p>
                 </div>
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="text-xs text-slate-400">Max Drawdown</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 transition-all duration-300 hover:border-red-500/30 hover:bg-slate-900/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <TrendingDown size={12} className="text-red-400" />
+                    Max Drawdown
+                  </p>
                   <p className="mt-1 text-lg font-semibold text-red-400">
                     {analytics?.riskAnalysis.maxDd || "$0.00"}
                   </p>
                 </div>
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="text-xs text-slate-400">Loss Streak</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 transition-all duration-300 hover:border-orange-500/30 hover:bg-slate-900/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <Flame size={12} className="text-orange-400" />
+                    Loss Streak
+                  </p>
                   <p className="mt-1 text-lg font-semibold text-orange-400">
                     {analytics?.riskAnalysis.lossStreak || 0} trades
                   </p>
                 </div>
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="text-xs text-slate-400">Best Trade</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 transition-all duration-300 hover:border-emerald-500/30 hover:bg-slate-900/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <AwardIcon size={12} className="text-emerald-400" />
+                    Best Trade
+                  </p>
                   <p className="mt-1 text-lg font-semibold text-emerald-400">
                     ${(analytics?.bestTrade || 0).toFixed(2)}
                   </p>
                 </div>
-                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="text-xs text-slate-400">Worst Trade</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 transition-all duration-300 hover:border-red-500/30 hover:bg-slate-900/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <Snowflake size={12} className="text-red-400" />
+                    Worst Trade
+                  </p>
                   <p className="mt-1 text-lg font-semibold text-red-400">
                     ${(analytics?.worstTrade || 0).toFixed(2)}
                   </p>
@@ -481,9 +541,13 @@ export default function AnalyticsPage() {
           </section>
 
           {/* Insights */}
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+          <section className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition-all duration-700 hover:border-blue-500/20 hover:shadow-lg hover:shadow-blue-500/5 ${
+            animateCards ? "animate-in fade-in slide-in-from-bottom-4 duration-500" : "opacity-0"
+          }`} style={{ animationDelay: '800ms' }}>
             <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="text-emerald-400" size={20} />
+              <div className="rounded-lg bg-blue-500/10 p-2 text-blue-400">
+                <AlertCircle size={20} />
+              </div>
               <h2 className="text-lg font-semibold">Performance Insights</h2>
             </div>
             <div className="space-y-2">
@@ -491,7 +555,7 @@ export default function AnalyticsPage() {
                 analytics.insights.map((insight, index) => (
                   <div
                     key={index}
-                    className="rounded-xl border border-slate-800 bg-slate-950/50 p-4 text-sm text-slate-300"
+                    className="rounded-xl border border-slate-800 bg-slate-950/50 p-4 text-sm text-slate-300 transition-all duration-300 hover:border-blue-500/20 hover:bg-slate-900/50"
                   >
                     {insight}
                   </div>
