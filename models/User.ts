@@ -1,4 +1,4 @@
-
+// models/User.ts
 import mongoose, { type Document, type Model } from "mongoose";
 
 export interface IUser extends Document {
@@ -8,6 +8,8 @@ export interface IUser extends Document {
   image?: string;
   emailVerified?: Date;
   provider?: "credentials" | "google";
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,6 +49,18 @@ const UserSchema = new mongoose.Schema<IUser>(
     emailVerified: {
       type: Date,
       required: false,
+    },
+
+    resetPasswordToken: {
+      type: String,
+      required: false,
+      select: false, // Don't return by default for security
+    },
+
+    resetPasswordExpires: {
+      type: Date,
+      required: false,
+      select: false, 
     },
   },
   {
