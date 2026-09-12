@@ -33,11 +33,12 @@ export default function Header() {
     { label: "Features", href: "#features" },
     { label: "How It Works", href: "#how-it-works" },
     { label: "Pricing", href: "#pricing" },
+    { label: "Blog", href: "/blog" },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-2xl">
-      {/* TOP INFO BAR - Optional, you can remove if not needed */}
+      {/* TOP INFO BAR */}
       <div className={`bg-black text-gray-300 text-xs sm:text-sm py-2.5 px-4 border-b border-neutral-900 transition-all duration-300 ${
         scrolled ? "hidden" : ""
       }`}>
@@ -54,7 +55,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* CORE NAVIGATION (Dark Theme) */}
+      {/* CORE NAVIGATION */}
       <div className={`transition-all duration-300 ${
         scrolled 
           ? "bg-black/95 backdrop-blur-lg border-b border-neutral-900/50" 
@@ -62,9 +63,8 @@ export default function Header() {
       }`}>
         <div className="max-w-7xl mx-auto px-4 h-28 flex justify-between items-center">
           
-          {/* Brand Logo - Overlapping Style (Like KEGO) */}
+          {/* Brand Logo */}
           <Link href="/" className="flex items-center justify-center group h-full select-none z-10">
-            {/* LARGE OVERLAPPING LOGO WRAPPER */}
             <div className="relative w-32 h-32 sm:w-40 sm:h-40 -my-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
               <Image 
                 src="/images/LOGO.png" 
@@ -73,7 +73,6 @@ export default function Header() {
                 priority
                 className="object-contain bg-transparent drop-shadow-xl"
               />
-              {/* Glow effect on hover */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           </Link>
@@ -84,7 +83,7 @@ export default function Header() {
               <Link 
                 key={link.label} 
                 href={link.href}
-                className="transition-colors py-2 relative tracking-widest text-gray-300 hover:text-emerald-400"
+                className="group transition-colors py-2 relative tracking-widest text-gray-300 hover:text-emerald-400"
               >
                 {link.label}
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
@@ -119,7 +118,7 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Flyout (Dark Theme) */}
+        {/* Mobile Flyout */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-black border-b border-neutral-900 px-4 pt-2 pb-6 space-y-3 absolute top-full left-0 w-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Mobile Logo */}
@@ -153,7 +152,7 @@ export default function Header() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between px-4 py-3 rounded-md font-bold text-sm tracking-wide uppercase text-gray-300 hover:bg-neutral-900 hover:text-emerald-400 transition-all duration-300"
+                className="flex items-center justify-between px-4 py-3 rounded-md font-bold text-sm tracking-wide uppercase text-gray-300 hover:bg-neutral-900 hover:text-emerald-400 transition-all duration-300 group"
                 style={{
                   animationDelay: `${index * 0.05}s`,
                 }}
