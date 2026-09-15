@@ -1,7 +1,7 @@
 // app/education/technical-analysis/page.tsx
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,7 +12,6 @@ import {
   Shield,
   Target,
   Clock,
-  CheckCircle2,
   GraduationCap,
   LineChart,
   Activity,
@@ -34,460 +33,591 @@ import {
   Waves,
   Percent,
   Gauge,
+  ChevronDown,
+  ChevronUp,
+  TrendingUp,
+  Zap,
+  EyeOff,
+  Timer,
+  Ban,
+  Calendar,
 } from "lucide-react";
 
-// ===== Image Component (renders real image or fallback placeholder) =====
-function ChartImage({
+// ============================================
+// EDUCATIONAL IMAGE COMPONENT
+// ============================================
+function EducationalImage({
   title,
   description,
   src,
   aspect = "aspect-video",
+  priority = false,
 }: {
   title: string;
   description?: string;
   src: string;
   aspect?: string;
+  priority?: boolean;
 }) {
   const [errored, setErrored] = useState(false);
 
-  if (errored) {
-    return (
-      <div
-        className={`relative ${aspect} w-full overflow-hidden rounded-2xl border-2 border-dashed border-gray-700 bg-gradient-to-br from-gray-900/60 to-gray-950/60 flex items-center justify-center`}
-      >
-        <div className="text-center px-6">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-            <Video className="h-5 w-5 text-emerald-400" />
-          </div>
-          <p className="text-sm font-semibold text-gray-300">{title}</p>
-          {description && (
-            <p className="mt-1 text-xs text-gray-500 max-w-md">{description}</p>
-          )}
-          <p className="mt-2 text-[10px] text-red-400 uppercase tracking-wider font-bold">
-            Add image: {src}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={`relative ${aspect} w-full overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/40 group`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={title}
-        onError={() => setErrored(true)}
-        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-      />
-      {description && (
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 py-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <p className="text-xs text-gray-300">{description}</p>
-        </div>
-      )}
-    </div>
+    <figure className="my-8 group">
+      <div
+        className={`relative ${aspect} w-full overflow-hidden rounded-lg border border-white/[0.06] bg-zinc-950/50`}
+      >
+        {errored ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center px-6">
+              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                <Video className="h-4 w-4 text-zinc-500" />
+              </div>
+              <p className="text-sm font-medium text-zinc-400">{title}</p>
+              <p className="mt-1 text-xs text-zinc-600 font-mono">
+                {src}
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={src}
+            alt={title}
+            loading={priority ? "eager" : "lazy"}
+            onError={() => setErrored(true)}
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
+          />
+        )}
+      </div>
+      <figcaption className="mt-3 flex items-start gap-2 text-xs">
+        <span className="shrink-0 text-zinc-600 font-mono">Fig.</span>
+        <span className="text-zinc-500">
+          <span className="font-medium text-zinc-400">{title}</span>
+          {description && ` — ${description}`}
+        </span>
+      </figcaption>
+    </figure>
   );
 }
 
-// ===== Section Heading =====
-function SectionHeading({
+// ============================================
+// SECTION HEADER
+// ============================================
+function SectionHeader({
   number,
   title,
   icon: Icon,
-  color = "emerald",
 }: {
-  number?: string;
+  number: string;
   title: string;
   icon: any;
-  color?: "emerald" | "blue" | "amber" | "purple" | "rose";
 }) {
-  const colorMap = {
-    emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    blue: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    rose: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-  };
-
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${colorMap[color]}`}
-      >
-        <Icon size={22} />
+    <header className="mb-8 pb-5 border-b border-white/[0.06]">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="font-mono text-xs text-zinc-600 tracking-wider">
+          SECTION {number}
+        </span>
+        <div className="h-px flex-1 bg-white/[0.06]" />
       </div>
-      <div>
-        {number && (
-          <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-0.5">
-            Section {number}
-          </p>
-        )}
-        <h2 className="text-2xl font-bold text-white">{title}</h2>
+      <div className="flex items-start gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.02] text-zinc-400">
+          <Icon size={19} />
+        </div>
+        <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight leading-snug pt-1.5">
+          {title}
+        </h2>
       </div>
-    </div>
+    </header>
   );
 }
 
-// ===== Info Box =====
-function InfoBox({
-  type = "info",
+// ============================================
+// CALLOUT
+// ============================================
+function Callout({
+  variant = "info",
   title,
   children,
 }: {
-  type?: "info" | "warning" | "tip" | "danger";
+  variant?: "info" | "tip" | "warning";
   title?: string;
   children: React.ReactNode;
 }) {
-  const typeMap = {
+  const variantMap = {
     info: {
-      bg: "bg-blue-500/5",
-      border: "border-blue-500/30",
+      bg: "bg-blue-500/[0.03]",
+      border: "border-blue-500/15",
       icon: Info,
-      text: "text-blue-400",
-    },
-    warning: {
-      bg: "bg-amber-500/5",
-      border: "border-amber-500/30",
-      icon: AlertTriangle,
-      text: "text-amber-400",
+      text: "text-blue-400/90",
+      label: "text-blue-400",
     },
     tip: {
-      bg: "bg-purple-500/5",
-      border: "border-purple-500/30",
+      bg: "bg-amber-500/[0.03]",
+      border: "border-amber-500/15",
       icon: Lightbulb,
-      text: "text-purple-400",
+      text: "text-amber-400/90",
+      label: "text-amber-400",
     },
-    danger: {
-      bg: "bg-red-500/5",
-      border: "border-red-500/30",
+    warning: {
+      bg: "bg-red-500/[0.03]",
+      border: "border-red-500/15",
       icon: AlertTriangle,
-      text: "text-red-400",
+      text: "text-red-400/90",
+      label: "text-red-400",
     },
   };
-  const config = typeMap[type];
+  const config = variantMap[variant];
   const Icon = config.icon;
 
   return (
     <div
-      className={`rounded-2xl border ${config.border} ${config.bg} p-5 flex gap-4`}
+      className={`my-6 rounded-lg border ${config.border} ${config.bg} p-4 flex gap-3`}
     >
-      <div
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${config.bg} border ${config.border}`}
-      >
-        <Icon size={16} className={config.text} />
-      </div>
-      <div className="flex-1">
+      <Icon size={16} className={`${config.label} shrink-0 mt-0.5`} />
+      <div className="flex-1 min-w-0">
         {title && (
-          <p className={`text-sm font-bold ${config.text} mb-1.5`}>{title}</p>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wider ${config.label} mb-1.5`}
+          >
+            {title}
+          </p>
         )}
-        <div className="text-sm text-gray-300 leading-relaxed">{children}</div>
+        <div className={`text-sm ${config.text} leading-relaxed`}>
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
-// ===== Bullet List =====
-function BulletList({ items }: { items: (string | React.ReactNode)[] }) {
+// ============================================
+// BULLET LIST
+// ============================================
+function BulletList({
+  items,
+  className = "",
+}: {
+  items: (string | React.ReactNode)[];
+  className?: string;
+}) {
   return (
-    <ul className="space-y-3">
+    <ul className={`space-y-2.5 ${className}`}>
       {items.map((item, i) => (
         <li key={i} className="flex items-start gap-3">
-          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
-          <span className="text-sm text-gray-300 leading-relaxed">{item}</span>
+          <span className="mt-[9px] h-1 w-1 rounded-full bg-zinc-600 shrink-0" />
+          <span className="text-sm text-zinc-400 leading-relaxed">{item}</span>
         </li>
       ))}
     </ul>
   );
 }
 
+// ============================================
+// CONCEPT CARD (for numbered assumptions)
+// ============================================
+function ConceptCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="group rounded-lg border border-white/[0.06] bg-white/[0.01] p-5 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.02] hover:-translate-y-0.5">
+      <div className="flex items-baseline gap-3 mb-3">
+        <span className="font-mono text-xs text-zinc-600">{number}</span>
+        <h3 className="text-base font-semibold text-white">{title}</h3>
+      </div>
+      <div className="pl-7">{children}</div>
+    </div>
+  );
+}
+
+// ============================================
+// PATTERN CARD (for chart patterns)
+// ============================================
+function PatternCard({
+  title,
+  badge,
+  badgeTone = "neutral",
+  children,
+}: {
+  title: string;
+  badge?: string;
+  badgeTone?: "bullish" | "bearish" | "neutral";
+  children: React.ReactNode;
+}) {
+  const toneMap = {
+    bullish: "border-emerald-500/20 bg-emerald-500/[0.06] text-emerald-400",
+    bearish: "border-red-500/20 bg-red-500/[0.06] text-red-400",
+    neutral: "border-white/[0.08] bg-white/[0.03] text-zinc-400",
+  };
+
+  return (
+    <div className="rounded-lg border border-white/[0.06] bg-white/[0.01] overflow-hidden">
+      <div className="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-white/[0.06]">
+        <h3 className="text-sm font-semibold text-white">{title}</h3>
+        {badge && (
+          <span
+            className={`inline-flex items-center rounded-md border ${toneMap[badgeTone]} px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider`}
+          >
+            {badge}
+          </span>
+        )}
+      </div>
+      <div className="p-5">{children}</div>
+    </div>
+  );
+}
+
+// ============================================
+// FORMULA CARD
+// ============================================
+function FormulaCard({
+  title,
+  formula,
+  note,
+}: {
+  title: string;
+  formula: string;
+  note?: string;
+}) {
+  return (
+    <div className="my-6 rounded-lg border border-white/[0.08] bg-zinc-950 p-5">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+        {title}
+      </p>
+      <div className="rounded-md border border-white/[0.04] bg-black px-4 py-3">
+        <p className="font-mono text-sm text-white">{formula}</p>
+      </div>
+      {note && <p className="mt-3 text-xs text-zinc-500 leading-relaxed">{note}</p>}
+    </div>
+  );
+}
+
+// ============================================
+// DATA TABLE
+// ============================================
+function DataTable({
+  headers,
+  rows,
+}: {
+  headers: string[];
+  rows: string[][];
+}) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-white/[0.06]">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-white/[0.02] border-b border-white/[0.06]">
+              {headers.map((h, i) => (
+                <th
+                  key={i}
+                  className={`px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 ${
+                    i === 0 ? "text-left" : "text-right"
+                  }`}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr
+                key={i}
+                className={`border-b border-white/[0.04] last:border-0 transition-colors hover:bg-white/[0.02] ${
+                  i % 2 === 1 ? "bg-white/[0.008]" : ""
+                }`}
+              >
+                {row.map((cell, j) => (
+                  <td
+                    key={j}
+                    className={`px-4 py-3 ${
+                      j === 0
+                        ? "text-zinc-300 font-medium"
+                        : "text-right font-mono text-zinc-400 tabular-nums"
+                    }`}
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// MAIN PAGE
+// ============================================
 export default function TechnicalAnalysisPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("intro");
   const [progress, setProgress] = useState(0);
 
-  // Track reading progress
+  const sections = [
+    { id: "intro", label: "Introduction" },
+    { id: "assumptions", label: "Assumptions" },
+    { id: "dow-theory", label: "Dow Theory" },
+    { id: "charting", label: "Charting Basics" },
+    { id: "elliott-wave", label: "Elliott Wave" },
+    { id: "greater-fool", label: "Greater Fool Theory" },
+    { id: "price-charts", label: "Price Charts" },
+    { id: "support-resistance", label: "Support & Resistance" },
+    { id: "patterns", label: "Patterns" },
+    { id: "gaps", label: "Gaps" },
+    { id: "triangles", label: "Triangles & Flags" },
+    { id: "indicators", label: "Indicators" },
+    { id: "weaknesses", label: "Weaknesses" },
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
+      // Reading progress
       const totalHeight =
         document.documentElement.scrollHeight - window.innerHeight;
-      const scrolled = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+      const scrolled =
+        totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
       setProgress(scrolled);
 
-      // Update active section based on scroll
-      const sections = [
-        "intro",
-        "assumptions",
-        "dow-theory",
-        "charting",
-        "elliott-wave",
-        "greater-fool",
-        "price-charts",
-        "support-resistance",
-        "patterns",
-        "gaps",
-        "triangles",
-        "indicators",
-        "weaknesses",
-      ];
-      for (const id of sections) {
-        const el = document.getElementById(id);
+      // Active section detection
+      for (const s of sections) {
+        const el = document.getElementById(s.id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            setActiveSection(id);
+          if (rect.top <= 140 && rect.bottom >= 140) {
+            setActiveSection(s.id);
             break;
           }
         }
       }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ===== Sidebar navigation =====
-  const sidebarNav = [
-    { id: "intro", label: "Introduction", color: "emerald" },
-    { id: "assumptions", label: "Assumptions", color: "emerald" },
-    { id: "dow-theory", label: "Dow Theory", color: "blue" },
-    { id: "charting", label: "Charting Basics", color: "blue" },
-    { id: "elliott-wave", label: "Elliott Wave Theory", color: "blue" },
-    { id: "greater-fool", label: "Greater Fool Theory", color: "blue" },
-    { id: "price-charts", label: "Price Charts", color: "amber" },
-    { id: "support-resistance", label: "Support & Resistance", color: "amber" },
-    { id: "patterns", label: "Reversal & Continuation Patterns", color: "purple" },
-    { id: "gaps", label: "Gaps", color: "purple" },
-    { id: "triangles", label: "Triangles & Flags", color: "purple" },
-    { id: "indicators", label: "Indicators", color: "rose" },
-    { id: "weaknesses", label: "Weaknesses", color: "rose" },
-  ];
-
-  const getColorClasses = (color: string) => {
-    const map: Record<string, { bg: string; text: string; border: string }> = {
-      emerald: {
-        bg: "bg-emerald-500/10",
-        text: "text-emerald-400",
-        border: "border-emerald-500/20",
-      },
-      blue: {
-        bg: "bg-blue-500/10",
-        text: "text-blue-400",
-        border: "border-blue-500/20",
-      },
-      amber: {
-        bg: "bg-amber-500/10",
-        text: "text-amber-400",
-        border: "border-amber-500/20",
-      },
-      purple: {
-        bg: "bg-purple-500/10",
-        text: "text-purple-400",
-        border: "border-purple-500/20",
-      },
-      rose: {
-        bg: "bg-rose-500/10",
-        text: "text-rose-400",
-        border: "border-rose-500/20",
-      },
-    };
-    return map[color] || map.emerald;
-  };
-
   const scrollToSection = (id: string) => {
-    setActiveSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 100;
-      const elementPosition =
-        element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: elementPosition - offset, behavior: "smooth" });
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 90;
+      const top = el.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: "smooth" });
     }
-    setSidebarOpen(false);
+    setMobileTocOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Animated background orbs */}
-      <div className="fixed -left-48 -top-48 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 blur-3xl animate-float pointer-events-none" />
-      <div className="fixed -bottom-48 -right-48 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-emerald-500/10 blur-3xl animate-float animation-delay-600 pointer-events-none" />
-
-      {/* Reading progress bar */}
+    <div className="min-h-screen bg-zinc-950 text-white antialiased">
+      {/* Reading progress */}
       <div
-        className="fixed top-0 left-0 z-[60] h-0.5 bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-100"
+        className="fixed top-0 left-0 z-50 h-px bg-white/40 transition-all duration-100"
         style={{ width: `${progress}%` }}
       />
 
-      <div className="relative">
-        {/* MOBILE HEADER */}
-        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-800 bg-black/95 px-4 backdrop-blur-lg lg:hidden">
-          <Link href="/education" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500">
-              <GraduationCap className="h-4 w-4 text-white" />
+      {/* ============================================
+          TOP NAVIGATION
+          ============================================ */}
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-14 items-center justify-between">
+            {/* Left: brand + breadcrumb */}
+            <div className="flex items-center gap-3 min-w-0">
+              <Link href="/" className="flex items-center gap-2 shrink-0 group">
+                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white/[0.06] border border-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
+                  <TrendingUp size={14} className="text-emerald-400" />
+                </div>
+                <span className="text-sm font-semibold tracking-tight hidden sm:inline">
+                  Trade<span className="text-emerald-400">Lab</span>
+                </span>
+              </Link>
+              <div className="h-4 w-px bg-white/[0.08] hidden sm:block" />
+              <nav className="flex items-center gap-2 text-xs text-zinc-500">
+                <Link
+                  href="/education"
+                  className="hover:text-zinc-300 transition-colors hidden sm:inline"
+                >
+                  Education
+                </Link>
+                <span className="hidden sm:inline text-zinc-700">/</span>
+                <span className="text-zinc-400 font-medium truncate">
+                  Technical Analysis
+                </span>
+              </nav>
             </div>
-            <span className="text-lg font-bold tracking-tight">
-              Trade<span className="text-emerald-400">Lab</span>
-            </span>
-          </Link>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-900 hover:text-white transition"
-          >
-            {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </header>
 
-        {/* SIDEBAR */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        <aside
-          className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col border-r border-gray-800 bg-black transition-transform duration-300 lg:translate-x-0 ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="flex h-20 items-center justify-between border-b border-gray-800 px-6">
-            <Link href="/education" className="flex items-center gap-2 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg shadow-emerald-500/20 transition-all group-hover:scale-110">
-                <LineChart className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold tracking-tight">
-                Technical<span className="text-emerald-400">Analysis</span>
-              </span>
-            </Link>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white lg:hidden"
-            >
-              <X size={20} />
-            </button>
+            {/* Right: quick actions */}
+            <div className="flex items-center gap-2">
+              <Link
+                href="/dashboard"
+                className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-white/[0.12] hover:text-white"
+              >
+                <Home size={13} />
+                Dashboard
+              </Link>
+              <Link
+                href="/education/learning-path"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-white text-zinc-950 px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-zinc-200"
+              >
+                <Compass size={13} />
+                Learning Path
+              </Link>
+              <button
+                onClick={() => setMobileTocOpen(!mobileTocOpen)}
+                className="lg:hidden inline-flex items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400"
+              >
+                {mobileTocOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                Contents
+              </button>
+            </div>
           </div>
+        </div>
 
-          <nav className="flex-1 overflow-y-auto px-4 py-6">
-            <p className="px-4 mb-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-              On This Page
+        {/* Mobile TOC dropdown */}
+        {mobileTocOpen && (
+          <div className="lg:hidden border-t border-white/[0.06] bg-zinc-950/95 backdrop-blur-xl">
+            <div className="max-h-[60vh] overflow-y-auto px-4 py-3">
+              {sections.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => scrollToSection(s.id)}
+                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                    activeSection === s.id
+                      ? "bg-white/[0.06] text-white font-medium"
+                      : "text-zinc-400 hover:bg-white/[0.03] hover:text-white"
+                  }`}
+                >
+                  <span
+                    className={`h-1 w-1 rounded-full shrink-0 ${
+                      activeSection === s.id ? "bg-emerald-400" : "bg-zinc-700"
+                    }`}
+                  />
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* ============================================
+          HERO
+          ============================================ */}
+      <section className="relative border-b border-white/[0.06] overflow-hidden">
+        {/* Subtle background accent */}
+        <div className="absolute inset-0 opacity-40 pointer-events-none">
+          <div className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-emerald-500/[0.05] blur-3xl" />
+          <div className="absolute -right-32 top-1/4 h-64 w-64 rounded-full bg-blue-500/[0.04] blur-3xl" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <div className="max-w-3xl">
+            {/* Back link */}
+            <Link
+              href="/education"
+              className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-6 group"
+            >
+              <ArrowLeft
+                size={13}
+                className="transition-transform group-hover:-translate-x-0.5"
+              />
+              Back to Education
+            </Link>
+
+            {/* Category */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 mb-5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                Core Subject
+              </span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05]">
+              Technical Analysis
+            </h1>
+
+            {/* Description */}
+            <p className="mt-5 max-w-2xl text-base sm:text-lg text-zinc-400 leading-relaxed">
+              A complete guide to understanding how price action, chart
+              patterns, and technical indicators help traders forecast market
+              movements using historical data.
             </p>
-            <div className="space-y-1">
-              {sidebarNav.map((item) => {
-                const colors = getColorClasses(item.color);
-                const isActive = activeSection === item.id;
-                return (
+
+            {/* Meta pills */}
+            <div className="mt-7 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-xs text-zinc-400">
+                <Clock size={12} className="text-zinc-500" />
+                45 min read
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-xs text-zinc-400">
+                <BookOpen size={12} className="text-zinc-500" />
+                13 sections
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-xs text-zinc-400">
+                <Award size={12} className="text-zinc-500" />
+                Intermediate
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          TWO-COLUMN LAYOUT
+          ============================================ */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-16">
+          {/* ============ STICKY TOC ============ */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 py-12">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600 mb-4">
+                On This Page
+              </p>
+              <nav className="space-y-0.5">
+                {sections.map((s) => (
                   <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`w-full flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition text-left ${
-                      isActive
-                        ? `${colors.bg} ${colors.text} font-medium`
-                        : "text-gray-400 hover:bg-gray-900 hover:text-white"
+                    key={s.id}
+                    onClick={() => scrollToSection(s.id)}
+                    className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-all duration-150 ${
+                      activeSection === s.id
+                        ? "bg-white/[0.05] text-white"
+                        : "text-zinc-500 hover:bg-white/[0.02] hover:text-zinc-300"
                     }`}
                   >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full shrink-0 ${
-                        isActive ? "bg-current" : "bg-gray-700"
+                      className={`h-px shrink-0 transition-all duration-200 ${
+                        activeSection === s.id
+                          ? "w-4 bg-emerald-400"
+                          : "w-2 bg-zinc-700"
                       }`}
                     />
-                    <span className="flex-1">{item.label}</span>
+                    <span className="truncate">{s.label}</span>
                   </button>
-                );
-              })}
+                ))}
+              </nav>
             </div>
+          </aside>
 
-            <div className="mt-8 pt-6 border-t border-gray-800">
-              <p className="px-4 mb-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                Quick Links
-              </p>
-              <Link
-                href="/education"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-400 hover:bg-gray-900 hover:text-white transition"
-              >
-                <GraduationCap size={19} />
-                Education Hub
-              </Link>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-gray-400 hover:bg-gray-900 hover:text-white transition"
-              >
-                <Home size={19} />
-                Dashboard
-              </Link>
-            </div>
-          </nav>
-
-          <div className="border-t border-gray-800 p-4">
-            <Link
-              href="/education/learning-path"
-              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-sm font-bold text-white transition hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/30"
-            >
-              <Compass className="h-4 w-4" />
-              Learning Path
-            </Link>
-          </div>
-        </aside>
-
-        {/* MAIN CONTENT */}
-        <main className="lg:pl-72">
-          <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-            {/* PAGE HEADER */}
-            <section className="mb-10">
-              <Link
-                href="/education"
-                className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition group mb-4"
-              >
-                <ArrowLeft
-                  size={16}
-                  className="group-hover:-translate-x-1 transition-transform"
-                />
-                Back to Education
-              </Link>
-
-              <div className="flex items-center gap-2 mb-3">
-                <LineChart className="h-4 w-4 text-blue-400" />
-                <p className="text-sm font-medium text-blue-400">
-                  Core Subject · Technical Analysis
-                </p>
-              </div>
-
-              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-                <span className="text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text">
-                  Technical Analysis
-                </span>
-              </h1>
-
-              <p className="mt-4 max-w-3xl text-base text-gray-400 leading-relaxed">
-                A complete guide to understanding how price action, chart
-                patterns, and technical indicators help traders forecast market
-                movements using historical data.
-              </p>
-
-              <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                <span className="flex items-center gap-1.5">
-                  <Clock size={12} />
-                  45 min read
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <BookOpen size={12} />
-                  13 sections
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Award size={12} />
-                  Intermediate
-                </span>
-              </div>
-            </section>
-
-            {/* SECTION 01 — INTRODUCTION */}
-            <section id="intro" className="mb-12 scroll-mt-24">
-              <SectionHeading
+          {/* ============ MAIN CONTENT ============ */}
+          <article className="min-w-0 py-12 lg:py-16 max-w-3xl">
+            {/* ============================================
+                SECTION 01 — INTRODUCTION
+                ============================================ */}
+            <section id="intro" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="01"
                 title="What is Technical Analysis?"
                 icon={LineChart}
-                color="emerald"
               />
-
               <BulletList
                 items={[
                   "Studying stock price graphs and a few momentum oscillators.",
@@ -497,29 +627,27 @@ export default function TechnicalAnalysisPage() {
                   "Exclusive use of historical data.",
                 ]}
               />
-
-              <div className="mt-6">
-                <ChartImage
-                  title="Technical Analysis Overview Diagram"
-                  description="Visual illustration of technical analysis concepts"
-                  src="/images/education/technical-analysis-overview.png"
-                />
-              </div>
+              <EducationalImage
+                title="Technical Analysis Overview"
+                description="Visual illustration of technical analysis concepts"
+                src="/images/education/technical-analysis-overview.png"
+                priority
+              />
             </section>
 
-            {/* SECTION 02 — ASSUMPTIONS */}
-            <section id="assumptions" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 02 — ASSUMPTIONS
+                ============================================ */}
+            <section id="assumptions" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="02"
                 title="Assumptions of Technical Analysis"
                 icon={Brain}
-                color="emerald"
               />
-
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {[
                   {
-                    num: "1",
+                    num: "01",
                     title: "Market discounts everything",
                     points: [
                       "Only considers price movements, ignores fundamental factors.",
@@ -528,7 +656,7 @@ export default function TechnicalAnalysisPage() {
                     ],
                   },
                   {
-                    num: "2",
+                    num: "02",
                     title: "Prices move in trends",
                     points: [
                       "Price movements are assumed to follow particular trend.",
@@ -536,41 +664,31 @@ export default function TechnicalAnalysisPage() {
                     ],
                   },
                   {
-                    num: "3",
+                    num: "03",
                     title: "History tends to repeat itself",
                     points: [
                       "Market participants provide consistent reaction to similar market stimuli over time.",
                     ],
                   },
                 ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-bold">
-                        {item.num}
-                      </span>
-                      <h3 className="text-lg font-bold text-white">
-                        {item.title}
-                      </h3>
-                    </div>
+                  <ConceptCard key={i} number={item.num} title={item.title}>
                     <BulletList items={item.points} />
-                  </div>
+                  </ConceptCard>
                 ))}
               </div>
             </section>
 
-            {/* SECTION 03 — DOW THEORY */}
-            <section id="dow-theory" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 03 — DOW THEORY
+                ============================================ */}
+            <section id="dow-theory" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="03"
                 title="Dow Theory"
                 icon={Waves}
-                color="blue"
               />
 
-              <p className="text-sm text-gray-300 leading-relaxed mb-4">
+              <p className="text-sm text-zinc-400 leading-relaxed mb-6">
                 The Dow theory on stock price movement is a form of technical
                 analysis. The theory was derived from 255 Wall Street Journal
                 editorials written by Charles H. Dow, journalist, founder and
@@ -578,60 +696,52 @@ export default function TechnicalAnalysisPage() {
                 Jones and Company.
               </p>
 
-              <InfoBox type="info" title="Hypothesis">
+              <Callout variant="info" title="Hypothesis">
                 Dow Theory is based on the hypothesis that the stock market does
                 not perform on a random basis. Rather, it is guided by some
                 specific trends.
-              </InfoBox>
+              </Callout>
 
-              <h3 className="text-lg font-bold text-white mt-6 mb-4">
+              <h3 className="mt-10 mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">
                 Three Types of Specific Trends
               </h3>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-3">
                 {[
                   {
                     title: "Primary Trend",
                     desc: "Primary movement or major trend may last from less than a year to several years. It can be bullish or bearish.",
-                    color: "emerald",
                   },
                   {
                     title: "Secondary Trend",
                     desc: "Primary movement or major trend may last from less than a year to several years. It can be bullish or bearish.",
-                    color: "blue",
                   },
                   {
                     title: "Minor Trend",
                     desc: "Day to day trend or movements in prices over few days. It is of very short duration.",
-                    color: "amber",
                   },
-                ].map((trend, i) => {
-                  const colors = getColorClasses(trend.color);
-                  return (
-                    <div
-                      key={i}
-                      className={`rounded-2xl border ${colors.border} ${colors.bg} p-5`}
-                    >
-                      <h4 className={`text-base font-bold ${colors.text} mb-2`}>
-                        {trend.title}
-                      </h4>
-                      <p className="text-sm text-gray-300 leading-relaxed">
-                        {trend.desc}
-                      </p>
-                    </div>
-                  );
-                })}
+                ].map((trend, i) => (
+                  <div
+                    key={i}
+                    className="rounded-lg border border-white/[0.06] bg-white/[0.01] p-4"
+                  >
+                    <h4 className="text-sm font-semibold text-white mb-2">
+                      {trend.title}
+                    </h4>
+                    <p className="text-xs text-zinc-500 leading-relaxed">
+                      {trend.desc}
+                    </p>
+                  </div>
+                ))}
               </div>
 
-              <div className="mt-6">
-                <ChartImage
-                  title="Dow Theory Trends Diagram"
-                  description="Illustration of primary, secondary, and minor trends"
-                  src="/images/education/dow-theory-trends.png"
-                />
-              </div>
+              <EducationalImage
+                title="Dow Theory Trends"
+                description="Illustration of primary, secondary, and minor trends"
+                src="/images/education/dow-theory-trends.png"
+              />
 
-              <h3 className="text-lg font-bold text-white mt-8 mb-4">
+              <h3 className="mt-10 mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">
                 Basic Assumptions
               </h3>
               <BulletList
@@ -645,15 +755,15 @@ export default function TechnicalAnalysisPage() {
               />
             </section>
 
-            {/* SECTION 04 — CHARTING BASICS */}
-            <section id="charting" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 04 — CHARTING
+                ============================================ */}
+            <section id="charting" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="04"
                 title="Charting: The Basic Tool"
                 icon={BarChart3}
-                color="blue"
               />
-
               <BulletList
                 items={[
                   "Motive of identifying price trends based on historical data.",
@@ -662,36 +772,33 @@ export default function TechnicalAnalysisPage() {
                   "Both price and volume data are studied simultaneously for both the security as well as the market.",
                 ]}
               />
-
-              <div className="mt-6">
-                <ChartImage
-                  title="Charting Example Diagram"
-                  description="Sample chart showing price and volume analysis"
-                  src="/images/education/charting-example.png"
-                />
-              </div>
+              <EducationalImage
+                title="Charting Example"
+                description="Sample chart showing price and volume analysis"
+                src="/images/education/charting-example.png"
+              />
             </section>
 
-            {/* SECTION 05 — ELLIOTT WAVE THEORY */}
-            <section id="elliott-wave" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 05 — ELLIOTT WAVE
+                ============================================ */}
+            <section id="elliott-wave" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="05"
                 title="Elliott Wave Theory"
                 icon={Waves}
-                color="blue"
               />
-
               <BulletList
                 items={[
                   "Developed by Ralph Nelson Elliott.",
                   "Theory states that the long term major patterns may consist of five successive steps or five waves.",
                   <>
                     Types of market:{" "}
-                    <span className="text-emerald-400 font-semibold">
+                    <span className="text-emerald-400 font-medium">
                       Bull market
                     </span>{" "}
                     and{" "}
-                    <span className="text-red-400 font-semibold">
+                    <span className="text-red-400 font-medium">
                       Bear market
                     </span>
                     .
@@ -699,77 +806,76 @@ export default function TechnicalAnalysisPage() {
                 ]}
               />
 
-              <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <div className="mt-8 space-y-8">
                 <div>
-                  <h4 className="text-base font-bold text-emerald-400 mb-3">
+                  <h4 className="mb-3 text-sm font-semibold text-emerald-400">
                     Elliott Wave Theory in Bull Market
                   </h4>
-                  <ChartImage
-                    title="Bull Market Elliott Wave Diagram"
+                  <EducationalImage
+                    title="Bull Market Elliott Wave"
                     description="5-wave bullish pattern illustration"
                     src="/images/education/elliott-wave-bull.png"
                   />
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-red-400 mb-3">
+                  <h4 className="mb-3 text-sm font-semibold text-red-400">
                     Elliott Wave Theory in Bear Market
                   </h4>
-                  <ChartImage
-                    title="Bear Market Elliott Wave Diagram"
+                  <EducationalImage
+                    title="Bear Market Elliott Wave"
                     description="5-wave bearish pattern illustration"
                     src="/images/education/elliott-wave-bear.png"
                   />
                 </div>
+                <div>
+                  <h4 className="mb-3 text-sm font-semibold text-white">
+                    Real Life Example
+                  </h4>
+                  <EducationalImage
+                    title="Real Life Elliott Wave Example"
+                    description="Actual chart showing Elliott Wave pattern"
+                    src="/images/education/elliott-wave-reallife.png"
+                  />
+                </div>
               </div>
-
-              <h4 className="text-base font-bold text-white mt-8 mb-3">
-                Real Life Example
-              </h4>
-              <ChartImage
-                title="Real Life Elliott Wave Example"
-                description="Actual chart showing Elliott Wave pattern"
-                src="/images/education/elliott-wave-reallife.png"
-              />
             </section>
 
-            {/* SECTION 06 — GREATER FOOL THEORY */}
-            <section id="greater-fool" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 06 — GREATER FOOL THEORY
+                ============================================ */}
+            <section id="greater-fool" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="06"
                 title="Greater Fool Theory"
                 icon={Lightbulb}
-                color="blue"
               />
-
-              <InfoBox type="tip">
+              <Callout variant="tip">
                 The belief that we can always buy investments at any given
                 price, setting aside valuations, and eventually turning them
                 into a profit because there will always be a "Greater Fool"
                 willing to pay the higher price.
-              </InfoBox>
-
-              <div className="mt-6">
-                <ChartImage
-                  title="Greater Fool Theory Illustration"
-                  description="Conceptual diagram of the greater fool theory"
-                  src="/images/education/greater-fool-theory.png"
-                />
-              </div>
+              </Callout>
+              <EducationalImage
+                title="Greater Fool Theory"
+                description="Conceptual diagram of the greater fool theory"
+                src="/images/education/greater-fool-theory.png"
+              />
             </section>
 
-            {/* SECTION 07 — PRICE CHARTS */}
-            <section id="price-charts" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 07 — PRICE CHARTS
+                ============================================ */}
+            <section id="price-charts" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="07"
                 title="Price Charts"
                 icon={Activity}
-                color="amber"
               />
 
-              <h3 className="text-lg font-bold text-white mb-3">
+              <h3 className="mt-4 mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">
                 Key Price Points
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+              <div className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
                   "Opening Price",
                   "High Price",
@@ -778,23 +884,15 @@ export default function TechnicalAnalysisPage() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-center"
+                    className="rounded-md border border-white/[0.06] bg-white/[0.01] px-3 py-2.5 text-center"
                   >
-                    <p className="text-sm font-semibold text-amber-400">
-                      {item}
-                    </p>
+                    <p className="text-xs font-medium text-zinc-300">{item}</p>
                   </div>
                 ))}
               </div>
 
               {/* Bar Charts */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    <BarChart3 size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Bar Charts</h3>
-                </div>
+              <PatternCard title="Bar Charts">
                 <BulletList
                   items={[
                     "This is a popular technique of showing the price variation and volume on a particular day.",
@@ -803,23 +901,17 @@ export default function TechnicalAnalysisPage() {
                     "The close and open are represented on the vertical line by a horizontal dash.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Bar Chart Example"
-                    description="Sample bar chart showing OHLC data"
-                    src="/images/education/bar-chart.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Bar Chart Example"
+                  description="Sample bar chart showing OHLC data"
+                  src="/images/education/bar-chart.png"
+                />
+              </PatternCard>
+
+              <div className="h-3" />
 
               {/* Line Chart */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <LineChart size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Line Chart</h3>
-                </div>
+              <PatternCard title="Line Chart">
                 <BulletList
                   items={[
                     "Line chart represents any variable over a set period of time.",
@@ -828,25 +920,17 @@ export default function TechnicalAnalysisPage() {
                     "They depict any variable like volume of a security, index number, price etc.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Line Chart Example"
-                    description="Sample line chart showing price over time"
-                    src="/images/education/line-chart.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Line Chart Example"
+                  description="Sample line chart showing price over time"
+                  src="/images/education/line-chart.png"
+                />
+              </PatternCard>
+
+              <div className="h-3" />
 
               {/* Point and Figure */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    <HashIcon size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">
-                    Point and Figure Chart
-                  </h3>
-                </div>
+              <PatternCard title="Point and Figure Chart">
                 <BulletList
                   items={[
                     "The point and figure chart is not well known or used by the average investor but it has had a long history of use dating back to the first technical traders.",
@@ -859,25 +943,17 @@ export default function TechnicalAnalysisPage() {
                     </>,
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Point and Figure Chart Example"
-                    description="Sample P&F chart with X and O columns"
-                    src="/images/education/point-figure-chart.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Point and Figure Chart Example"
+                  description="Sample P&F chart with X and O columns"
+                  src="/images/education/point-figure-chart.png"
+                />
+              </PatternCard>
+
+              <div className="h-3" />
 
               {/* Candlestick Chart */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                    <Layers size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">
-                    Candlestick Chart
-                  </h3>
-                </div>
+              <PatternCard title="Candlestick Chart">
                 <BulletList
                   items={[
                     "Similar to the bar chart, the candlestick also has a thin vertical line showing the period's trading range.",
@@ -886,88 +962,47 @@ export default function TechnicalAnalysisPage() {
                     "If the stock's price has closed above the previous day's close but below the day's open, the candlestick will be black or filled with the color that is used to indicate an up day.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Candlestick Chart Example"
-                    description="Sample candlestick chart with bullish and bearish candles"
-                    src="/images/education/candlestick-chart.png"
-                  />
-                </div>
+                <EducationalImage
+                  title="Candlestick Chart Example"
+                  description="Sample candlestick chart with bullish and bearish candles"
+                  src="/images/education/candlestick-chart.png"
+                />
 
-                {/* Data table */}
-                <div className="mt-6">
-                  <h4 className="text-sm font-bold text-white mb-3">
-                    Example Data Table
-                  </h4>
-                  <div className="overflow-x-auto rounded-xl border border-gray-800">
-                    <table className="w-full text-xs">
-                      <thead className="bg-gray-950 border-b border-gray-800">
-                        <tr>
-                          <th className="px-3 py-2 text-left text-gray-400 font-semibold">
-                            Date
-                          </th>
-                          <th className="px-3 py-2 text-right text-gray-400 font-semibold">
-                            Open
-                          </th>
-                          <th className="px-3 py-2 text-right text-gray-400 font-semibold">
-                            High
-                          </th>
-                          <th className="px-3 py-2 text-right text-gray-400 font-semibold">
-                            Low
-                          </th>
-                          <th className="px-3 py-2 text-right text-gray-400 font-semibold">
-                            Close
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-800/50 text-gray-300">
-                        {[
-                          ["22 March, 2016", "196.8", "198.25", "194.5", "197.5"],
-                          ["23 March, 2016", "196.9", "197.6", "195.3", "196.6"],
-                          ["24 March, 2016", "196.6", "196.6", "196.6", "196.6"],
-                          ["25 March, 2016", "196.6", "196.6", "196.6", "196.6"],
-                          ["28 March, 2016", "195.8", "198.25", "187.65", "188.3"],
-                          ["29 March, 2016", "188.5", "191.25", "186.65", "189.5"],
-                          ["30 March, 2016", "192.25", "198.3", "190.5", "197.55"],
-                          ["31 March, 2016", "197.85", "198.75", "192.35", "194.25"],
-                          ["1 April, 2016", "193.7", "197.25", "192", "195.65"],
-                        ].map((row, i) => (
-                          <tr key={i} className="hover:bg-gray-900/40">
-                            {row.map((cell, j) => (
-                              <td
-                                key={j}
-                                className={`px-3 py-2 ${
-                                  j === 0
-                                    ? "font-medium text-white"
-                                    : "text-right font-mono"
-                                }`}
-                              >
-                                {cell}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                <h4 className="mt-8 mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">
+                  Example Data Table
+                </h4>
+                <DataTable
+                  headers={["Date", "Open", "High", "Low", "Close"]}
+                  rows={[
+                    ["22 March, 2016", "196.8", "198.25", "194.5", "197.5"],
+                    ["23 March, 2016", "196.9", "197.6", "195.3", "196.6"],
+                    ["24 March, 2016", "196.6", "196.6", "196.6", "196.6"],
+                    ["25 March, 2016", "196.6", "196.6", "196.6", "196.6"],
+                    ["28 March, 2016", "195.8", "198.25", "187.65", "188.3"],
+                    ["29 March, 2016", "188.5", "191.25", "186.65", "189.5"],
+                    ["30 March, 2016", "192.25", "198.3", "190.5", "197.55"],
+                    ["31 March, 2016", "197.85", "198.75", "192.35", "194.25"],
+                    ["1 April, 2016", "193.7", "197.25", "192", "195.65"],
+                  ]}
+                />
+              </PatternCard>
             </section>
 
-            {/* SECTION 08 — SUPPORT & RESISTANCE */}
-            <section id="support-resistance" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 08 — SUPPORT & RESISTANCE
+                ============================================ */}
+            <section id="support-resistance" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="08"
                 title="Support and Resistance Levels"
                 icon={Target}
-                color="amber"
               />
 
-              <div className="grid gap-6 lg:grid-cols-2 mb-6">
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <ArrowUpRight className="h-5 w-5 text-emerald-400" />
-                    <h3 className="text-lg font-bold text-emerald-400">
+              <div className="grid gap-3 lg:grid-cols-2 mb-8">
+                <div className="rounded-lg border border-emerald-500/15 bg-emerald-500/[0.02] p-5">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <ArrowUpRight className="h-4 w-4 text-emerald-400" />
+                    <h3 className="text-sm font-semibold text-emerald-400">
                       Support
                     </h3>
                   </div>
@@ -979,10 +1014,10 @@ export default function TechnicalAnalysisPage() {
                   />
                 </div>
 
-                <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <ArrowDownRight className="h-5 w-5 text-red-400" />
-                    <h3 className="text-lg font-bold text-red-400">
+                <div className="rounded-lg border border-red-500/15 bg-red-500/[0.02] p-5">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <ArrowDownRight className="h-4 w-4 text-red-400" />
+                    <h3 className="text-sm font-semibold text-red-400">
                       Resistance
                     </h3>
                   </div>
@@ -995,25 +1030,26 @@ export default function TechnicalAnalysisPage() {
                 </div>
               </div>
 
-              <ChartImage
+              <EducationalImage
                 title="Support and Resistance Diagram"
                 description="Chart showing support and resistance levels with price bouncing between them"
                 src="/images/education/support-resistance.png"
               />
             </section>
 
-            {/* SECTION 09 — PATTERNS */}
-            <section id="patterns" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 09 — PATTERNS
+                ============================================ */}
+            <section id="patterns" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="09"
                 title="Reversal & Continuation Patterns"
                 icon={Activity}
-                color="purple"
               />
 
-              <div className="grid gap-4 sm:grid-cols-2 mb-8">
-                <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-                  <h3 className="text-base font-bold text-purple-400 mb-3">
+              <div className="grid gap-3 sm:grid-cols-2 mb-10">
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.01] p-5">
+                  <h3 className="text-sm font-semibold text-purple-400 mb-3">
                     Reversal Patterns
                   </h3>
                   <BulletList
@@ -1023,8 +1059,8 @@ export default function TechnicalAnalysisPage() {
                     ]}
                   />
                 </div>
-                <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-                  <h3 className="text-base font-bold text-blue-400 mb-3">
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.01] p-5">
+                  <h3 className="text-sm font-semibold text-blue-400 mb-3">
                     Continuation Patterns
                   </h3>
                   <BulletList
@@ -1036,195 +1072,165 @@ export default function TechnicalAnalysisPage() {
                 </div>
               </div>
 
-              {/* Head and Shoulders */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Head and Shoulders
-                </h3>
-                <BulletList
-                  items={[
-                    "The head-and-shoulders top signals to chart users that a security's price is likely to make a downward move, especially after it breaks below the neckline of the pattern.",
-                    "Due to this pattern forming mostly at the peaks of upward trends, it is considered to be a trend-reversal pattern, as the security heads down after the pattern's completion.",
-                  ]}
-                />
-                <div className="mt-4">
-                  <ChartImage
+              <div className="space-y-3">
+                <PatternCard title="Head and Shoulders" badge="Bearish" badgeTone="bearish">
+                  <BulletList
+                    items={[
+                      "The head-and-shoulders top signals to chart users that a security's price is likely to make a downward move, especially after it breaks below the neckline of the pattern.",
+                      "Due to this pattern forming mostly at the peaks of upward trends, it is considered to be a trend-reversal pattern, as the security heads down after the pattern's completion.",
+                    ]}
+                  />
+                  <EducationalImage
                     title="Head and Shoulders Pattern"
                     description="Illustration of head and shoulders reversal pattern"
                     src="/images/education/head-shoulders.png"
                   />
-                </div>
-              </div>
+                </PatternCard>
 
-              {/* Inverted Head and Shoulders */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Inverted Head and Shoulder
-                </h3>
-                <BulletList
-                  items={[
-                    "The inverted head-and-shoulders pattern is the exact opposite of the head-and-shoulders top, as it signals that the security is set to make an upward move.",
-                    "Often coming at the end of a downtrend, the inverse head and shoulders is considered to be a reversal pattern, as the security typically heads higher after the completion of the pattern.",
-                  ]}
-                />
-                <div className="mt-4">
-                  <ChartImage
+                <PatternCard
+                  title="Inverted Head and Shoulder"
+                  badge="Bullish"
+                  badgeTone="bullish"
+                >
+                  <BulletList
+                    items={[
+                      "The inverted head-and-shoulders pattern is the exact opposite of the head-and-shoulders top, as it signals that the security is set to make an upward move.",
+                      "Often coming at the end of a downtrend, the inverse head and shoulders is considered to be a reversal pattern, as the security typically heads higher after the completion of the pattern.",
+                    ]}
+                  />
+                  <EducationalImage
                     title="Inverted Head and Shoulders Pattern"
                     description="Illustration of inverted head and shoulders pattern"
                     src="/images/education/inverted-head-shoulders.png"
                   />
-                </div>
-              </div>
+                </PatternCard>
 
-              {/* Double Tops and Bottoms */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Double Tops and Bottoms
-                </h3>
-                <BulletList
-                  items={[
-                    "These two reversal patterns illustrate a security's attempt to continue an existing trend.",
-                    "Upon several attempts to move higher, the trend is reversed and a new trend begins.",
-                    <>
-                      These chart patterns formed will often resemble what looks
-                      like a "W" (for a double bottom) or an "M" (double top).
-                    </>,
-                  ]}
-                />
+                <PatternCard title="Double Tops and Bottoms">
+                  <BulletList
+                    items={[
+                      "These two reversal patterns illustrate a security's attempt to continue an existing trend.",
+                      "Upon several attempts to move higher, the trend is reversed and a new trend begins.",
+                      <>
+                        These chart patterns formed will often resemble what looks
+                        like a "W" (for a double bottom) or an "M" (double top).
+                      </>,
+                    ]}
+                  />
 
-                <div className="grid gap-6 lg:grid-cols-2 mt-6">
-                  <div>
-                    <h4 className="text-base font-bold text-red-400 mb-3">
-                      Double Top
-                    </h4>
-                    <BulletList
-                      items={[
-                        "Found at the peaks of an upward trend and is a clear signal that the preceding upward trend is weakening.",
-                        "Buyers are losing interest.",
-                        "Upon completion of this pattern, the trend is considered to be reversed and the security is expected to move lower.",
-                      ]}
-                    />
-                    <div className="mt-4">
-                      <ChartImage
+                  <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                    <div>
+                      <h4 className="mb-3 text-sm font-semibold text-red-400">
+                        Double Top
+                      </h4>
+                      <BulletList
+                        items={[
+                          "Found at the peaks of an upward trend and is a clear signal that the preceding upward trend is weakening.",
+                          "Buyers are losing interest.",
+                          "Upon completion of this pattern, the trend is considered to be reversed and the security is expected to move lower.",
+                        ]}
+                      />
+                      <EducationalImage
                         title="Double Top Pattern"
                         description="M-shaped double top pattern"
                         src="/images/education/double-top.png"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <h4 className="text-base font-bold text-emerald-400 mb-3">
-                      Double Bottom
-                    </h4>
-                    <BulletList
-                      items={[
-                        "A double bottom appears when a share hits a low, comes higher, again pulls back.",
-                        "Appears at the end of a bearish trend and indicates the start of the bullish trend.",
-                      ]}
-                    />
-                    <div className="mt-4">
-                      <ChartImage
+                    <div>
+                      <h4 className="mb-3 text-sm font-semibold text-emerald-400">
+                        Double Bottom
+                      </h4>
+                      <BulletList
+                        items={[
+                          "A double bottom appears when a share hits a low, comes higher, again pulls back.",
+                          "Appears at the end of a bearish trend and indicates the start of the bullish trend.",
+                        ]}
+                      />
+                      <EducationalImage
                         title="Double Bottom Pattern"
                         description="W-shaped double bottom pattern"
                         src="/images/education/double-bottom.png"
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 rounded-xl border border-gray-800 bg-gray-950 p-4">
-                  <p className="text-xs text-gray-400 leading-relaxed">
-                    <span className="font-bold text-white">Key Phases:</span>{" "}
-                    Price Trend → First Trough → Peak → Second Trough → Advance
-                    From Trough → Resistance Break → Resistance Turned Support
-                    → Price Target.
-                  </p>
-                </div>
-              </div>
+                  <div className="mt-6 rounded-md border border-white/[0.06] bg-zinc-950 px-4 py-3">
+                    <p className="text-xs text-zinc-500 leading-relaxed">
+                      <span className="font-semibold text-zinc-300">
+                        Key Phases:
+                      </span>{" "}
+                      Price Trend → First Trough → Peak → Second Trough →
+                      Advance From Trough → Resistance Break → Resistance
+                      Turned Support → Price Target.
+                    </p>
+                  </div>
+                </PatternCard>
 
-              {/* Rounding Bottom */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Rounding Bottom
-                </h3>
-                <BulletList
-                  items={[
-                    "The Rounding Bottom is a long-term reversal pattern that is best suited for weekly charts.",
-                    "It is also referred to as a saucer bottom, and represents a long consolidation period that turns from a bearish bias to a bullish bias.",
-                  ]}
-                />
-                <div className="mt-4">
-                  <ChartImage
+                <PatternCard title="Rounding Bottom" badge="Bullish" badgeTone="bullish">
+                  <BulletList
+                    items={[
+                      "The Rounding Bottom is a long-term reversal pattern that is best suited for weekly charts.",
+                      "It is also referred to as a saucer bottom, and represents a long consolidation period that turns from a bearish bias to a bullish bias.",
+                    ]}
+                  />
+                  <EducationalImage
                     title="Rounding Bottom Pattern"
                     description="Saucer-shaped rounding bottom chart"
                     src="/images/education/rounding-bottom.png"
                   />
-                </div>
-              </div>
+                </PatternCard>
 
-              {/* Cup and Handle */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  The Cup and the Handle
-                </h3>
-                <BulletList
-                  items={[
-                    "The Cup with Handle is a bullish continuation pattern that marks a consolidation period followed by a breakout.",
-                    "As its name implies, there are two parts to the pattern: the cup and the handle.",
-                    "The cup forms after an advance and looks like a bowl or rounding bottom.",
-                    "As the cup is completed, a trading range develops on the right hand side and the handle is formed.",
-                    "A subsequent breakout from the handle's trading range signals a continuation of the prior advance.",
-                  ]}
-                />
-                <div className="mt-4">
-                  <ChartImage
+                <PatternCard title="The Cup and the Handle" badge="Bullish" badgeTone="bullish">
+                  <BulletList
+                    items={[
+                      "The Cup with Handle is a bullish continuation pattern that marks a consolidation period followed by a breakout.",
+                      "As its name implies, there are two parts to the pattern: the cup and the handle.",
+                      "The cup forms after an advance and looks like a bowl or rounding bottom.",
+                      "As the cup is completed, a trading range develops on the right hand side and the handle is formed.",
+                      "A subsequent breakout from the handle's trading range signals a continuation of the prior advance.",
+                    ]}
+                  />
+                  <EducationalImage
                     title="Cup and Handle Pattern"
                     description="Classic cup and handle formation"
                     src="/images/education/cup-handle.png"
                   />
-                </div>
 
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <h4 className="text-sm font-bold text-white mb-2">
-                      Procter and Gamble Stock Chart
-                    </h4>
-                    <ChartImage
-                      title="Procter and Gamble Stock Chart"
-                      description="Real example chart"
-                      aspect="aspect-square"
-                      src="/images/education/pg-stock-chart.png"
-                    />
+                  <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                    <div>
+                      <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Procter and Gamble Stock Chart
+                      </h4>
+                      <EducationalImage
+                        title="Procter and Gamble Stock Chart"
+                        description="Real example chart"
+                        aspect="aspect-square"
+                        src="/images/education/pg-stock-chart.png"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Amazon Stock Price Chart
+                      </h4>
+                      <EducationalImage
+                        title="Amazon Stock Price Chart"
+                        description="Real example chart"
+                        aspect="aspect-square"
+                        src="/images/education/amazon-stock-chart.png"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white mb-2">
-                      Amazon Stock Price Chart
-                    </h4>
-                    <ChartImage
-                      title="Amazon Stock Price Chart"
-                      description="Real example chart"
-                      aspect="aspect-square"
-                      src="/images/education/amazon-stock-chart.png"
-                    />
-                  </div>
-                </div>
+                </PatternCard>
               </div>
             </section>
 
-            {/* SECTION 10 — GAPS */}
-            <section id="gaps" className="mb-12 scroll-mt-24">
-              <SectionHeading
-                number="10"
-                title="Gaps"
-                icon={Activity}
-                color="purple"
-              />
+            {/* ============================================
+                SECTION 10 — GAPS
+                ============================================ */}
+            <section id="gaps" className="scroll-mt-24 mb-20">
+              <SectionHeader number="10" title="Gaps" icon={Activity} />
 
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6 mb-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Understanding Gaps
-                </h3>
+              <PatternCard title="Understanding Gaps">
                 <BulletList
                   items={[
                     "Gaps occur when a price opens much higher (gap higher) or lower (gap lower) than the previous day's close.",
@@ -1232,20 +1238,16 @@ export default function TechnicalAnalysisPage() {
                     "Until the gap is violated, we should assume the trend will continue in the gap's direction.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Gaps Diagram"
-                    description="Chart showing gap up and gap down examples"
-                    src="/images/education/gaps-diagram.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Gaps Diagram"
+                  description="Chart showing gap up and gap down examples"
+                  src="/images/education/gaps-diagram.png"
+                />
+              </PatternCard>
 
-              {/* Breakaway Gaps */}
-              <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-emerald-400 mb-3">
-                  Breakaway Gaps
-                </h3>
+              <div className="h-3" />
+
+              <PatternCard title="Breakaway Gaps" badge="Breakout" badgeTone="bullish">
                 <BulletList
                   items={[
                     "They occur when the price action is breaking out of their trading range or congestion area.",
@@ -1253,20 +1255,16 @@ export default function TechnicalAnalysisPage() {
                     "To break out of these areas requires market enthusiasm and, either, many more buyers than sellers for upside breakouts or more sellers than buyers for downside breakouts.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Breakaway Gaps Diagram"
-                    description="Chart showing breakout from congestion"
-                    src="/images/education/breakaway-gaps.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Breakaway Gaps Diagram"
+                  description="Chart showing breakout from congestion"
+                  src="/images/education/breakaway-gaps.png"
+                />
+              </PatternCard>
 
-              {/* Runaway Gaps */}
-              <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-blue-400 mb-3">
-                  Runaway Gaps
-                </h3>
+              <div className="h-3" />
+
+              <PatternCard title="Runaway Gaps" badge="Mid-trend" badgeTone="neutral">
                 <BulletList
                   items={[
                     "Runaway gaps are also called measuring gaps, and are best described as gaps that are caused by increased interest in the stock.",
@@ -1274,20 +1272,16 @@ export default function TechnicalAnalysisPage() {
                     "Increased buying interest happens all of a sudden, and the price gaps above the previous day's close. This type of runaway gap represents an almost panic state in traders.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Runaway Gaps Diagram"
-                    description="Chart showing mid-trend runaway gap"
-                    src="/images/education/runaway-gaps.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Runaway Gaps Diagram"
+                  description="Chart showing mid-trend runaway gap"
+                  src="/images/education/runaway-gaps.png"
+                />
+              </PatternCard>
 
-              {/* Exhaustion Gaps */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">
-                  Exhaustion Gaps
-                </h3>
+              <div className="h-3" />
+
+              <PatternCard title="Exhaustion Gaps" badge="Trend End" badgeTone="bearish">
                 <BulletList
                   items={[
                     "Exhaustion gaps are those that happen near the end of a good up- or downtrend. They are many times the first signal of the end of that move.",
@@ -1295,30 +1289,25 @@ export default function TechnicalAnalysisPage() {
                     "They can easily be mistaken for runaway gaps if one does not notice the exceptionally high volume.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Exhaustion Gaps Diagram"
-                    description="Chart showing exhaustion gap at trend end"
-                    src="/images/education/exhaustion-gaps.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Exhaustion Gaps Diagram"
+                  description="Chart showing exhaustion gap at trend end"
+                  src="/images/education/exhaustion-gaps.png"
+                />
+              </PatternCard>
             </section>
 
-            {/* SECTION 11 — TRIANGLES AND FLAGS */}
-            <section id="triangles" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 11 — TRIANGLES AND FLAGS
+                ============================================ */}
+            <section id="triangles" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="11"
                 title="Triangles and Flags"
                 icon={Activity}
-                color="purple"
               />
 
-              {/* Triangles */}
-              <div className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">
-                  Triangles
-                </h3>
+              <PatternCard title="Triangles">
                 <BulletList
                   items={[
                     "A triangle is formed when each succeeding peak is lower than the previous peak.",
@@ -1327,75 +1316,89 @@ export default function TechnicalAnalysisPage() {
                   ]}
                 />
 
-                <div className="grid gap-6 lg:grid-cols-3 mt-6">
-                  <div>
-                    <h4 className="text-sm font-bold text-blue-400 mb-3">
-                      Symmetric Triangle
-                    </h4>
-                    <ChartImage
-                      title="Symmetric Triangle Pattern"
-                      description="Converging trendlines"
-                      aspect="aspect-square"
-                      src="/images/education/symmetric-triangle.png"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-emerald-400 mb-3">
-                      Ascending Triangle (Bullish)
-                    </h4>
-                    <ChartImage
-                      title="Ascending Triangle Pattern"
-                      description="Bullish triangle with flat top"
-                      aspect="aspect-square"
-                      src="/images/education/ascending-triangle.png"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-red-400 mb-3">
-                      Descending Triangle (Bearish)
-                    </h4>
-                    <ChartImage
-                      title="Descending Triangle Pattern"
-                      description="Bearish triangle with flat bottom"
-                      aspect="aspect-square"
-                      src="/images/education/descending-triangle.png"
-                    />
-                  </div>
+                <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                  {[
+                    {
+                      title: "Symmetric Triangle",
+                      badge: "Neutral",
+                      tone: "neutral" as const,
+                      src: "/images/education/symmetric-triangle.png",
+                      desc: "Converging trendlines",
+                    },
+                    {
+                      title: "Ascending Triangle",
+                      badge: "Bullish",
+                      tone: "bullish" as const,
+                      src: "/images/education/ascending-triangle.png",
+                      desc: "Bullish triangle with flat top",
+                    },
+                    {
+                      title: "Descending Triangle",
+                      badge: "Bearish",
+                      tone: "bearish" as const,
+                      src: "/images/education/descending-triangle.png",
+                      desc: "Bearish triangle with flat bottom",
+                    },
+                  ].map((t, i) => (
+                    <div key={i}>
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-xs font-semibold text-white">
+                          {t.title}
+                        </h4>
+                        <span
+                          className={`rounded-md border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${
+                            t.tone === "bullish"
+                              ? "border-emerald-500/20 bg-emerald-500/[0.06] text-emerald-400"
+                              : t.tone === "bearish"
+                              ? "border-red-500/20 bg-red-500/[0.06] text-red-400"
+                              : "border-white/[0.08] bg-white/[0.03] text-zinc-400"
+                          }`}
+                        >
+                          {t.badge}
+                        </span>
+                      </div>
+                      <EducationalImage
+                        title={t.title}
+                        description={t.desc}
+                        aspect="aspect-square"
+                        src={t.src}
+                      />
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </PatternCard>
 
-              {/* Flags */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <h3 className="text-lg font-bold text-white mb-3">Flags</h3>
+              <div className="h-3" />
+
+              <PatternCard title="Flags">
                 <BulletList
                   items={[
                     "A flag pattern appears when a bull rally or a bear phase is interrupted by a consolidation pattern appearing as a rectangle or a parallelogram.",
                     "As the flag formation indicates a pause before continuation of earlier trend, the prices move in the same direction after the flag as before.",
                   ]}
                 />
-                <div className="mt-4">
-                  <h4 className="text-sm font-bold text-purple-400 mb-3">
-                    Parallelogram Flag
-                  </h4>
-                  <ChartImage
-                    title="Parallelogram Flag Pattern"
-                    description="Flag formation during trend"
-                    src="/images/education/parallelogram-flag.png"
-                  />
-                </div>
-              </div>
+                <h4 className="mt-6 mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  Parallelogram Flag
+                </h4>
+                <EducationalImage
+                  title="Parallelogram Flag Pattern"
+                  description="Flag formation during trend"
+                  src="/images/education/parallelogram-flag.png"
+                />
+              </PatternCard>
             </section>
 
-            {/* SECTION 12 — INDICATORS */}
-            <section id="indicators" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 12 — INDICATORS
+                ============================================ */}
+            <section id="indicators" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="12"
                 title="Indicator Analysis"
                 icon={Gauge}
-                color="rose"
               />
 
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6 mb-6">
+              <div className="mb-6">
                 <BulletList
                   items={[
                     "It's a mathematical examination of price and volume information over a given period.",
@@ -1405,205 +1408,216 @@ export default function TechnicalAnalysisPage() {
                 />
               </div>
 
-              {/* Moving Averages */}
-              <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <Activity size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">
-                    Moving Averages
-                  </h3>
-                </div>
+              <PatternCard title="Moving Averages">
                 <BulletList
                   items={[
                     "It refers to average level of closing prices, calculated on regular basis.",
                     "A sequence of averages is calculated by calculating averages on daily basis.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Moving Average Example"
-                    description="Chart showing moving average line over price"
-                    src="/images/education/moving-average.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Moving Average Example"
+                  description="Chart showing moving average line over price"
+                  src="/images/education/moving-average.png"
+                />
+              </PatternCard>
 
-              {/* RSI */}
-              <div className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    <Percent size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">
-                    Relative Strength Index (RSI)
-                  </h3>
-                </div>
+              <div className="h-3" />
+
+              <PatternCard title="Relative Strength Index (RSI)">
                 <BulletList
                   items={[
                     "Developed by J. Welles Wilder, the Relative Strength Index (RSI) is a momentum oscillator that measures the speed and change of price movements.",
                   ]}
                 />
 
-                <div className="mt-4 rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
-                  <p className="text-xs font-bold text-blue-400 mb-2">
-                    RSI Formula
-                  </p>
-                  <p className="text-sm font-mono text-white">
-                    RSI = 100 - 100 / (1 + RS)
-                  </p>
-                  <p className="mt-2 text-xs text-gray-400">
-                    Where RS = average of x days' up closes / average of x days'
-                    down closes.
-                  </p>
-                </div>
+                <FormulaCard
+                  title="RSI Formula"
+                  formula="RSI = 100 - 100 / (1 + RS)"
+                  note="Where RS = average of x days' up closes / average of x days' down closes."
+                />
 
-                <div className="mt-4">
-                  <ChartImage
-                    title="RSI Example Chart"
-                    description="Chart showing RSI indicator below price"
-                    src="/images/education/rsi-chart.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="RSI Example Chart"
+                  description="Chart showing RSI indicator below price"
+                  src="/images/education/rsi-chart.png"
+                />
+              </PatternCard>
 
-              {/* Crossover */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                    <MousePointer size={18} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Crossover</h3>
-                </div>
+              <div className="h-3" />
+
+              <PatternCard title="Crossover">
                 <BulletList
                   items={[
                     "Crossover is the point on a stock chart when a security and an indicator intersect.",
                     "Crossovers are used by technical analysts to aid in forecasting the future movements in the price of a stock.",
                   ]}
                 />
-                <div className="mt-4">
-                  <ChartImage
-                    title="Crossover Example"
-                    description="Chart showing crossover point between price and indicator"
-                    src="/images/education/crossover.png"
-                  />
-                </div>
-              </div>
+                <EducationalImage
+                  title="Crossover Example"
+                  description="Chart showing crossover point between price and indicator"
+                  src="/images/education/crossover.png"
+                />
+              </PatternCard>
             </section>
 
-            {/* SECTION 13 — WEAKNESSES */}
-            <section id="weaknesses" className="mb-12 scroll-mt-24">
-              <SectionHeading
+            {/* ============================================
+                SECTION 13 — WEAKNESSES
+                ============================================ */}
+            <section id="weaknesses" className="scroll-mt-24 mb-20">
+              <SectionHeader
                 number="13"
                 title="Weaknesses of Technical Analysis"
                 icon={AlertTriangle}
-                color="rose"
               />
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-2">
                 {[
                   {
+                    icon: Award,
                     title: "Experience",
                     desc: "Careful identification and interpretation of pattern requires a lot of experience.",
                   },
                   {
+                    icon: EyeOff,
                     title: "Biasness",
                     desc: "Must be free from biasness of technical analyst.",
                   },
                   {
+                    icon: Zap,
                     title: "Quickness in Identification",
                     desc: "The technical analyst must be a quick identifier of the pattern.",
                   },
                   {
+                    icon: Timer,
                     title: "Long Term Perspective",
                     desc: "Emphasis in the technical analysis should always be on the long term pattern.",
                   },
                   {
+                    icon: Ban,
                     title: "Not Suitable for New Listings",
                     desc: "Cannot be applied to new securities without historical data.",
                   },
                   {
+                    icon: AlertTriangle,
                     title: "Cannot Forecast New Phenomenon",
                     desc: "Cannot forecast unforeseen events like the 2008 financial crisis.",
                   },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl border border-red-500/20 bg-red-500/5 p-5"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <AlertTriangle className="h-4 w-4 text-red-400 shrink-0" />
-                      <h4 className="text-sm font-bold text-red-400">
-                        {item.title}
-                      </h4>
+                ].map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={i}
+                      className="rounded-lg border border-white/[0.06] bg-white/[0.01] p-4"
+                    >
+                      <div className="flex items-center gap-2.5 mb-2">
+                        <Icon size={14} className="text-zinc-500 shrink-0" />
+                        <h4 className="text-sm font-semibold text-zinc-200">
+                          {item.title}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-zinc-500 leading-relaxed pl-[22px]">
+                        {item.desc}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
 
-            {/* NEXT STEPS */}
-            <section className="rounded-2xl border border-gray-800 bg-gradient-to-br from-blue-950/30 via-cyan-950/30 to-emerald-950/30 p-6 lg:p-8 mb-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  <Rocket size={24} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Continue Learning
-                  </h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    You've covered the fundamentals of technical analysis. Next,
-                    explore fundamental analysis to understand how economic
-                    events drive currency prices.
-                  </p>
-                </div>
+            {/* ============================================
+                CONTINUE LEARNING
+                ============================================ */}
+            <section className="mt-24 border-t border-white/[0.06] pt-12">
+              <div className="mb-6">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600 mb-2">
+                  Next Step
+                </p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                  Continue Learning
+                </h2>
+                <p className="mt-2 text-sm text-zinc-400 max-w-lg">
+                  You've covered the fundamentals of technical analysis. Next,
+                  explore fundamental analysis to understand how economic
+                  events drive currency prices.
+                </p>
               </div>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <Link
                   href="/education/fundamental-analysis"
-                  className="group rounded-xl border border-gray-800 bg-gray-900/40 p-4 hover:border-amber-500/30 transition-all hover:scale-[1.02]"
+                  className="group rounded-lg border border-white/[0.06] bg-white/[0.01] p-5 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.02] hover:-translate-y-0.5"
                 >
-                  <div className="flex items-center gap-3">
-                    <BarChart3 className="h-5 w-5 text-amber-400" />
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-white group-hover:text-amber-400 transition">
-                        Fundamental Analysis
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Next recommended topic
-                      </p>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.06] bg-white/[0.02] text-amber-400">
+                      <BarChart3 size={16} />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-400">
+                      Primary
+                    </span>
+                  </div>
+                  <h3 className="text-base font-semibold text-white mb-1">
+                    Fundamental Analysis
+                  </h3>
+                  <p className="text-xs text-zinc-500 mb-4">
+                    Next recommended topic
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-zinc-400">
+                    <span>Continue</span>
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
                   </div>
                 </Link>
 
                 <Link
                   href="/education/risk-management"
-                  className="group rounded-xl border border-gray-800 bg-gray-900/40 p-4 hover:border-purple-500/30 transition-all hover:scale-[1.02]"
+                  className="group rounded-lg border border-white/[0.06] bg-white/[0.01] p-5 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.02] hover:-translate-y-0.5"
                 >
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-5 w-5 text-purple-400" />
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-white group-hover:text-purple-400 transition">
-                        Risk Management
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Essential for live trading
-                      </p>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.06] bg-white/[0.02] text-purple-400">
+                      <Shield size={16} />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-500 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-purple-400">
+                      Secondary
+                    </span>
+                  </div>
+                  <h3 className="text-base font-semibold text-white mb-1">
+                    Risk Management
+                  </h3>
+                  <p className="text-xs text-zinc-500 mb-4">
+                    Essential for live trading
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-zinc-400">
+                    <span>Continue</span>
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
                   </div>
                 </Link>
               </div>
             </section>
-          </div>
-        </main>
+
+            {/* ============================================
+                FOOTER
+                ============================================ */}
+            <div className="mt-20 pt-8 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-600">
+              <Link
+                href="/education"
+                className="inline-flex items-center gap-1.5 hover:text-zinc-400 transition-colors group"
+              >
+                <ArrowLeft
+                  size={13}
+                  className="transition-transform group-hover:-translate-x-0.5"
+                />
+                All Subjects
+              </Link>
+              <span className="font-mono">TradeLab · Education</span>
+            </div>
+          </article>
+        </div>
       </div>
     </div>
   );
